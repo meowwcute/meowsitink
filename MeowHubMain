@@ -3665,8 +3665,8 @@ function CheckItemBPCRBPCR(v463)
     end
 end
 local v466 = loadstring(game:HttpGet("https://raw.githubusercontent.com/AnhDangNhoEm/UiRedz/refs/heads/main/RedzUiV.txt"))():MakeWindow({
-    Title = "Tu\225\186\165n Anh IOS",
-    SubTitle = "by real_tuananhios",
+    Title = "Meow Hub Blox Fruits",
+    SubTitle = "by meowwcute._.",
     SaveFolder = "Redz | redz lib v5.lua"
 })
 local l_ScreenGui_0 = Instance.new("ScreenGui")
@@ -3741,7 +3741,6 @@ l_ImageButton_0.MouseButton1Click:Connect(function()
         v466:Minimize(true)
     end
 end)
-local v484 = v466:MakeTab({"Th\195\180ng Tin | Info", "info"})
 local v485 = v466:MakeTab({"Farming", "home"})
 local v486 = v466:MakeTab({"Auto Fishing", "rbxassetid://127664059821666"})
 local v487 = v466:MakeTab({"Quest | Items", "swords"})
@@ -3754,30 +3753,6 @@ local v493 = v466:MakeTab({"Teleport", "locate"})
 local v494 = v466:MakeTab({"PvP,Player", "user"})
 local v495 = v466:MakeTab({"Shop", "shoppingCart"})
 local v496 = v466:MakeTab({"Settings", "settings"})
-v484:AddDiscordInvite({
-    Name = "Tham Gia Discord",
-    Description = "Link Sever Discord",
-    Logo = "rbxassetid://110657725541747",
-    Invite = "https://discord.gg/kK2vMrUsQy"
-})
-v484:AddDiscordInvite({
-    Name = "Tu\225\186\165n Anh (T\195\186nnAngg)",
-    Description = "Facebook C\225\187\167a B\225\187\145 \196\144\195\162y Nh\195\179c",
-    Logo = "rbxassetid://110657725541747",
-    Invite = "https://www.facebook.com/tuananhiosdz"
-})
-v484:AddDiscordInvite({
-    Name = "Tu\225\186\165n Anh IOS",
-    Description = "YouTube C\225\187\167a B\225\187\145 \196\144\195\162y Nh\195\179c",
-    Logo = "rbxassetid://110657725541747",
-    Invite = "https://www.youtube.com/@tuananhios"
-})
-v484:AddDiscordInvite({
-    Name = "Tu\225\186\165n Anh IOS",
-    Description = "TikTok C\225\187\167a B\225\187\145 \196\144\195\162y Nh\195\179c",
-    Logo = "rbxassetid://110657725541747",
-    Invite = "https://www.tiktok.com/@tuananh_ios?_t=ZS-8z2MDp8Jn67&_r=1"
-})
 local _ = v485:AddSection({"Select Melee,Sword,Gun,Fruit"})
 _G.SelectWeapon = "Melee"
 task.spawn(function()
@@ -6512,9 +6487,9 @@ if World3 then
                                     if not l_Character_7:FindFirstChild("Tushita") and not l_Backpack_1:FindFirstChild("Tushita") then
                                         if not v798 then
                                             game.StarterGui:SetCore("SendNotification", {
-                                                Title = "Tu\225\186\165n Anh IOS",
+                                                Title = "Meowwcute._.",
                                                 Text = "Use! - Yama or Tushita",
-                                                con = "rbxassetid://110657725541747",
+                                                con = "rbxassetid://108339881167020",
                                                 Duration = 10
                                             })
                                             v798 = true
@@ -8877,7 +8852,7 @@ if l_LocalPlayer_18.Character then
     v1135(l_LocalPlayer_18.Character)
 end
 v494:AddSlider({
-    Title = "Speed Ch\225\186\161y by tuananhiosdz",
+    Title = "Speed Ch\225\186\161y by meowwcute._.",
     Min = 26,
     Max = 300,
     Default = getgenv().WalkSpeedValue,
@@ -8890,7 +8865,7 @@ v494:AddSlider({
     end
 })
 v494:AddSlider({
-    Title = "Nh\225\186\163y Cao by tuananhiosdz",
+    Title = "Nh\225\186\163y Cao by meowcute._.",
     Min = 50,
     Max = 500,
     Default = getgenv().JumpValue,
