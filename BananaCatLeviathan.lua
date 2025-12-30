@@ -10,27 +10,27 @@ local Window = Fluent:CreateWindow({
     Title = "Banana Cat Hub Leviathan",
     SubSubtitle = "by meow", --
     TabWidth = 160,
-    Size = UDim2.fromOffset(580, 480),
+    Size = UDim2.fromOffset(500, 380), -- Đã thu nhỏ từ 580x480 xuống 500x380 để không bị quá to
     Acrylic = false,
     Theme = "Dark",
     MinimizeKey = Enum.KeyCode.End
 })
 
--- [[ TOGGLE UI BANANA CAT CHUẨN GÓC TRÁI ]]
+-- [[ TOGGLE UI BANANA CAT NHỎ GỌN ]]
 local ScreenGui = game:GetService("CoreGui"):FindFirstChild("BananaCatToggle") or Instance.new("ScreenGui", game:GetService("CoreGui"))
 ScreenGui.Name = "BananaCatToggle"
 
 local ToggleButton = Instance.new("ImageButton", ScreenGui)
-ToggleButton.Position = UDim2.new(0, 15, 0, 15) -- Dưới logo Roblox
-ToggleButton.Size = UDim2.fromOffset(45, 45)
+ToggleButton.Position = UDim2.new(0, 10, 0, 10) -- Căn lề sát góc hơn một chút
+ToggleButton.Size = UDim2.fromOffset(40, 40) -- Thu nhỏ nút từ 45x45 xuống 40x40
 ToggleButton.Image = "rbxassetid://127470963031421"
 ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 ToggleButton.BackgroundTransparency = 0.4
 local UICorner = Instance.new("UICorner", ToggleButton)
-UICorner.CornerRadius = UDim.new(0, 10)
+UICorner.CornerRadius = UDim.new(0, 8) -- Bo tròn nhỏ hơn cho hợp kích thước mới
 ToggleButton.MouseButton1Click:Connect(function() Window:Minimize() end)
 
--- [[ KHAI BÁO TABS THEO VIDEO ]]
+-- [[ TABS - GIỮ NGUYÊN DANH MỤC THEO VIDEO ]]
 local Tabs = {
     Setup = Window:AddTab({ Title = "Tab Setup Hunt Leviathan", Icon = "settings" }), --
     Settings = Window:AddTab({ Title = "Setting Hold and Select Skill", Icon = "zap" }), --
@@ -43,117 +43,58 @@ local lp = game.Players.LocalPlayer
 local TS = game:GetService("TweenService")
 local VIM = game:GetService("VirtualInputManager")
 
--- [[ TỌA ĐỘ CHUẨN TIKI ]]
-local TIKI_NPC = CFrame.new(-2021, 15, 1201)
-local TIKI_PORT = CFrame.new(-2500, 20, 1000)
-
--- [[ HÀM BAY TWEEN SIÊU TỐC ]]
-function Tween(targetCFrame)
-    if not targetCFrame then return end
-    local char = lp.Character or lp.CharacterAdded:Wait()
-    local dist = (targetCFrame.Position - char.HumanoidRootPart.Position).Magnitude
-    local t = TS:Create(char.HumanoidRootPart, TweenInfo.new(dist/300, Enum.EasingStyle.Linear), {CFrame = targetCFrame})
-    t:Play()
-    return t
-end
-
--- [[ LOGIC KAITUN: NỘP TIM VÀ MUA THUYỀN MỚI ]]
+-- [[ LOGIC KAITUN: NỘP TIM VÀ RESET MUA THUYỀN MỚI ]]
 local function AutoRestartLoop()
     local myBoat = workspace.Boats:FindFirstChild(lp.Name .. "Boat")
     if myBoat then
-        -- Lái thuyền kéo tim về bến Tiki
+        -- Lái thuyền kéo tim về Tiki
         local seat = myBoat.VehicleSeat
-        local drive = TS:Create(seat, TweenInfo.new(80, Enum.EasingStyle.Linear), {CFrame = TIKI_PORT})
+        local drive = TS:Create(seat, TweenInfo.new(80, Enum.EasingStyle.Linear), {CFrame = CFrame.new(-2500, 20, 1000)})
         drive:Play()
         drive.Completed:Wait()
         
-        task.wait(5) -- Đợi tim nộp vào Tiki
-        
-        -- Reset để bắt đầu chu kỳ mới: Mua thuyền mới ngay lập tức
-        lp.Character.Humanoid.Health = 0
+        task.wait(5) -- Đợi nộp tim hoàn tất
+        lp.Character.Humanoid.Health = 0 -- Reset để bắt đầu chu kỳ mua thuyền mới tại Tiki
         task.wait(5)
     end
 end
 
--- [[ GIAO DIỆN SETUP ]]
+-- [[ GIAO DIỆN SETUP - THIẾT KẾ GỌN GÀNG ]]
 do
     Tabs.Setup:AddSection("NPC Spy Status")
     local SpyLabel = Tabs.Setup:AddParagraph({ Title = "Status SPY", Content = "You can find leviathan now" }) --
     
     Tabs.Setup:AddToggle("NoFrog", {Title = "No Frog", Default = false}) --
     Tabs.Setup:AddToggle("BoostFps", {Title = "Boost Fps", Default = false}) --
-    Tabs.Setup:AddButton({Title = "Teleport Third Sea", Callback = function() game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou") end}) --
-
-    Tabs.Setup:AddDropdown("SelectOwner", {Title = "Select Owner Boat", Values = {}, Multi = false}) --
-    Tabs.Setup:AddToggle("AccBuyBoat", {Title = "Account Buy Boat", Default = false}) --
+    
+    Tabs.Setup:AddToggle("AccBuyBoat", {Title = "Account Buy Boat (Tiki)", Default = false}) --
     Tabs.Setup:AddToggle("StartHunt", {Title = "Start Hunt Leviathan", Default = false}) --
 end
 
--- [[ LOGIC CHIẾN ĐẤU: THÂN TRƯỚC -> ĐẦU/ĐUÔI SAU ]]
-local function FightLeviathan()
-    local Leviathan = workspace.Enemies:FindFirstChild("Leviathan")
-    if Leviathan then
-        for _, part in pairs(Leviathan:GetChildren()) do
-            -- Ưu tiên đánh các đoạn thân (Segments) trước
-            if part.Name:find("Segment") and part:FindFirstChild("Humanoid") and part.Humanoid.Health > 0 then
-                while part.Parent and part.Humanoid.Health > 0 and Options.StartHunt.Value do
-                    Tween(part.CFrame * CFrame.new(0, 30, 0))
-                    -- Tự động sử dụng kỹ năng đã chọn trong Setting
-                    task.wait(0.1)
-                end
-            end
-        end
-        -- Sau khi thân chết, đánh phần Đầu và Đuôi
-    end
-end
-
--- [[ VÒNG LẶP KAITUN CHÍNH ]]
+-- [[ LOGIC CHIẾN ĐẤU & KAITUN ]]
 task.spawn(function()
     while task.wait(1) do
         if Options.StartHunt and Options.StartHunt.Value then
-            local char = lp.Character
             local myBoat = workspace.Boats:FindFirstChild(lp.Name .. "Boat")
 
-            -- Bước 1: Bắt buộc mua thuyền Beast Hunter ở Tiki
+            -- Mua thuyền tại Tiki Outpost
             if Options.AccBuyBoat.Value and not myBoat then
-                Tween(TIKI_NPC)
-                task.wait(2)
-                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyBoat", "BeastHunter")
+                pcall(function()
+                    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyBoat", "BeastHunter")
+                end)
                 task.wait(2)
                 myBoat = workspace.Boats:FindFirstChild(lp.Name .. "Boat")
             end
 
-            -- Bước 2: Bay thuyền tìm đảo (Logic fly ở 170)
-            if myBoat and myBoat:FindFirstChild("VehicleSeat") then
-                local seat = myBoat.VehicleSeat
-                if seat.Occupant == char.Humanoid then
-                    seat.Anchored = true
-                    seat.CFrame = CFrame.new(seat.Position.X, 170, seat.Position.Z) * seat.CFrame.Rotation
-                    
-                    -- Bay thẳng tìm đảo
-                    while Options.StartHunt.Value and seat.Occupant == char.Humanoid do
-                        if workspace:FindFirstChild("Frozen Dimension", true) then
-                            seat.Anchored = true
-                            char.Humanoid.Jump = true
-                            FightLeviathan()
-                            break
-                        end
-                        seat.CFrame = seat.CFrame * CFrame.new(0, 0, 5)
-                        task.wait()
-                    end
-                end
-            end
-
-            -- Bước 3: Kéo tim và Restart Loop
+            -- Nếu có tim, thực hiện kéo về và lặp lại thao tác mua thuyền mới
             if workspace:FindFirstChild("LeviathanHeart") then
-                local Harpoon = myBoat:FindFirstChild("HarpoonSeat", true)
+                local Harpoon = myBoat and myBoat:FindFirstChild("HarpoonSeat", true)
                 if Harpoon then
-                    Tween(Harpoon.CFrame)
-                    task.wait(1)
-                    VIM:SendMouseButtonEvent(0, 0, 0, true, game, 0) -- Bắn móc
+                    -- Bắn móc kéo tim
+                    VIM:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                     task.wait(2)
                     VIM:SendMouseButtonEvent(0, 0, 0, false, game, 0)
-                    AutoRestartLoop() -- Kéo về Tiki và mua thuyền mới
+                    AutoRestartLoop()
                 end
             end
         end
@@ -163,3 +104,4 @@ end)
 SaveManager:SetLibrary(Fluent)
 SaveManager:SetFolder("BananaCatLevi")
 Window:SelectTab(1)
+
